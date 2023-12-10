@@ -34,6 +34,7 @@ const gallery = document.getElementById("gallery");
 const galleryForm = document.querySelector("#galleryForm");
 const imageLinkInput = document.getElementById("imageLink");
 const imageNameInput = document.querySelector("#imageName");
+const removeBtn = document.querySelector("#removeBtn")
 
 function fillGallery() {
   imageList.reverse().forEach((img) => {
@@ -66,6 +67,22 @@ const addNewImage = () => {
 }
 
 
+function removeButton (item){
+  imageList.splice(item, 1)
+  updateGallery ()
+  
+}
+
+function updateGallery() {
+  
+  gallery.innerHTML = "";
+  
+  fillGallery();
+}
+
+removeBtn.addEventListener('click', removeButton)
+
+
 galleryForm.addEventListener('submit',  (event) => {
   event.preventDefault();
   const imageNameValue = imageNameInput.value;
@@ -78,6 +95,5 @@ galleryForm.addEventListener('submit',  (event) => {
   imageList.push(imgObj)
   addNewImage()
 })
-
 
 fillGallery();
