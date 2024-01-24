@@ -35,6 +35,31 @@ const galleryForm = document.querySelector("#galleryForm");
 const imageLinkInput = document.getElementById("imageLink");
 const imageNameInput = document.querySelector("#imageName");
 
+const loadScriptss = (src) => {
+  return new Promise((resolve, reject) => {
+    let script = document.createElement('script');
+    script.src = src;
+
+    script.onload = () => resolve(script);
+    script.onerror = () => reject(new Error(`Script load error for ${src}`));
+
+    console.log("i am getting here")
+    document.head.append(script);
+
+  })
+}
+
+const promise = loadScriptss('https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js')
+
+promise.then(() => {
+  console.log('script loaded')
+}).catch((err) => {
+  console.log(err)
+})
+
+
+
+
 function fillGallery() {
   imageList.reverse().forEach((img) => {
     const li = document.createElement("li");
@@ -80,4 +105,15 @@ galleryForm.addEventListener('submit',  (event) => {
 })
 
 
+const removeBtn = document.getElementById('removeBtn');
+removeBtn.addEventListener('click', (e) => {
+  e.stopPropagation()
+  console.log(e, 'this is the event object')
+})
 fillGallery();
+
+fromQuestion();
+
+
+
+
