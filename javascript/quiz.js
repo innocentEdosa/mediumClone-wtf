@@ -4,9 +4,10 @@ const optionsWrapper = document.getElementById("options");
 const count = document.getElementById("count");
 const nextButton = document.getElementById("nextButton");
 const userScore = document.getElementById("userScore");
+const countDownElement = document.getElementById("countDown");
+let countDown = 10;
 
 let inputArray = [];
-
 
 const questions = [
   {
@@ -59,6 +60,26 @@ const questionMetaData = {
   },
 };
 
+
+const handleCountDown = () => {
+ countDownElement.innerText = countDown;
+ if(countDown === 0) {
+  clearInterval(timeInterval)
+  handleInputClick({
+    target: {},
+  })
+  
+  setTimeout(() => {
+    nextButtonCallback()
+  }, 1000)
+  
+ } else {
+  countDown--;
+ }
+}
+
+let timeInterval = setInterval(handleCountDown, 1000)
+
 /**
  *
  * @param {*} e click event
@@ -80,14 +101,14 @@ const handleInputClick = function (e) {
 
   inputArray.map((input) => {
     input.disabled = true;
-    if(input.value === currentQuestion.answer) {
+    if (input.value === currentQuestion.answer) {
       input.parentNode.style.backgroundColor = "green";
+      input.nextElementSibling.nextElementSibling.style.display = "inline";
     }
-    if(input.value === value && input.value !== currentQuestion.answer) {
+    if (input.value === value && input.value !== currentQuestion.answer) {
       input.parentNode.style.backgroundColor = "red";
-
     }
-  })
+  });
 
   userScore.innerText = `${currenScore} / ${totalScore}`;
 };
@@ -107,15 +128,15 @@ const loadQuestion = () => {
     const input = document.createElement("input");
     const checkSpan = document.createElement("span");
 
-    checkSpan.innerHTML = "&#10003"; 
-    checkSpan.style.display = 'none';
+    checkSpan.innerHTML = "&#10003";
+    checkSpan.style.display = "none";
 
     input.id = index;
     input.type = "radio";
     input.name = "answer";
     input.value = option;
     input.addEventListener("click", handleInputClick);
-    inputArray.push(input)
+    inputArray.push(input);
 
     const label = document.createElement("label");
 
@@ -124,17 +145,21 @@ const loadQuestion = () => {
 
     li.appendChild(input);
     li.appendChild(label);
-    li.appendChild(checkSpan)
+    li.appendChild(checkSpan);
 
     optionsWrapper.appendChild(li);
   });
 };
 
-nextButton.addEventListener("click", () => {
+
+const nextButtonCallback = () => {
   if (questionMetaData.currentQuestionIndex < questions.length - 1) {
+    countDown = 10;
+    timeInterval = setInterval(handleCountDown, 1000)
     questionMetaData.currentQuestionIndex =
       questionMetaData.currentQuestionIndex + 1;
     loadQuestion();
   }
-});
+}
+nextButton.addEventListener("click",nextButtonCallback );
 loadQuestion();
